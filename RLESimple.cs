@@ -14,7 +14,6 @@ namespace NESSharp.Lib.Compression {
 
 		public byte[] Compress(params byte[] data) {
 			byte cur;
-			byte? next;
 			var len = data.Length;
 			var output = new List<byte>();
 
@@ -27,7 +26,6 @@ namespace NESSharp.Lib.Compression {
 
 			for (var i = 0; i < len; i++) {
 				cur = data[i];
-				next = i + 1 >= len ? (byte?)null : data[i + 1];
 
 				//Count total # of the same char
 				var runLength = 1;
@@ -49,7 +47,6 @@ namespace NESSharp.Lib.Compression {
 		}
 
 		public void Decompress(Action<RegisterA> block) {
-			byte compressionIndicator = 255;
 			_temp.Set(TempPtr0[Y.Set(0)]);
 			Loop.AscendWhile(Y++, () => Y.LessThan(_temp), _ => {
 				Y.State.Unsafe(() => {
