@@ -52,7 +52,7 @@ namespace NESSharp.Lib.Compression {
 				Y.State.Unsafe(() => {
 					X.Set(A.Set(TempPtr0[Y]));
 					Y++;
-					Loop.Descend(X, _ => {
+					Loop.Descend_Post(X, _ => {
 						block(A.Set(TempPtr0[Y]));
 					});
 				});
