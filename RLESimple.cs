@@ -12,14 +12,14 @@ namespace NESSharp.Lib.Compression {
 			_temp = VByte.New(Ram, $"{nameof(RLESimple)}{nameof(_temp)}");
 		}
 
-		public byte[] Compress(params byte[] data) {
-			byte cur;
+		public U8[] Compress(params U8[] data) {
+			U8 cur;
 			var len = data.Length;
-			var output = new List<byte>();
+			var output = new List<U8>();
 
 			void compress(int runLength, byte chr) {
 				if (runLength <= 255) {
-					output.Add((byte)runLength);
+					output.Add(runLength);
 					output.Add(chr);
 				} else throw new NotImplementedException(); //TODO: support >255 run lengths
 			}
@@ -41,7 +41,7 @@ namespace NESSharp.Lib.Compression {
 			}
 			var count = output.Count;
 			if (count > 255) throw new NotImplementedException();
-			output.Insert(0, (byte)(count + 1)); //max offset from starting value in this data set
+			output.Insert(0, count + 1); //max offset from starting value in this data set
 
 			return output.ToArray();
 		}

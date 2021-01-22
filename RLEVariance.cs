@@ -12,24 +12,24 @@ namespace NESSharp.Lib.Compression {
 			_temp = VByte.New(Ram, $"{nameof(RLEVariance)}{nameof(_temp)}");
 		}
 
-		public byte[] Compress(params byte[] data) {
-			byte compressionIndicator = 255;
-			byte cur;
-			byte? next;
+		public U8[] Compress(params U8[] data) {
+			U8 compressionIndicator = 255;
+			U8 cur;
+			U8? next;
 			var len = data.Length;
-			var output = new List<byte>();
+			var output = new List<U8>();
 
-			void compress(int runLength, byte chr) {
+			void compress(int runLength, U8 chr) {
 				if (runLength <= 255) {
 					output.Add(compressionIndicator);
-					output.Add((byte)runLength);
+					output.Add(runLength);
 					output.Add(chr);
 				} else throw new NotImplementedException(); //TODO: support >255 run lengths
 			}
 
 			for (var i = 0; i < len; i++) {
 				cur = data[i];
-				next = i + 1 >= len ? (byte?)null : data[i + 1];
+				next = i + 1 >= len ? null : data[i + 1];
 				if (cur != next && cur != compressionIndicator) {
 					output.Add(cur);
 					continue;
@@ -63,13 +63,13 @@ namespace NESSharp.Lib.Compression {
 			}
 			var count = output.Count;
 			if (count > 255) throw new NotImplementedException();
-			output.Insert(0, (byte)(count + 1)); //max offset from starting value in this data set
+			output.Insert(0, count + 1); //max offset from starting value in this data set
 
 			return output.ToArray();
 		}
 
 		public void Decompress(Action<RegisterA> block) {
-			byte compressionIndicator = 255;
+			U8 compressionIndicator = 255;
 			_temp.Set(TempPtr0[Y.Set(0)]);
 			Loop.AscendWhile(Y.Increment(), () => Y.LessThan(_temp), _ => {
 				If.Block(c => c
