@@ -38,7 +38,7 @@ namespace NESSharp.Lib.Compression {
 				//Count total # of the same char
 				var runLength = 1;
 				for (var j = i + 1; j < len; j++) {
-					if (cur == data[j])
+					if (cur == data[j] && runLength < 255)
 						runLength++;
 					else
 						break;
