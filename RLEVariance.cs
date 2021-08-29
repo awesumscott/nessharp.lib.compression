@@ -71,13 +71,13 @@ namespace NESSharp.Lib.Compression {
 		public void Decompress(Action<RegisterA> block) {
 			U8 compressionIndicator = 255;
 			_temp.Set(TempPtr0[Y.Set(0)]);
-			Loop.AscendWhile(Y.Increment(), () => Y.LessThan(_temp), _ => {
+			Loop.AscendWhile(Y.Inc(), () => Y.LessThan(_temp), _ => {
 				If.Block(c => c
 					.True(() => A.Set(TempPtr0[Y]).Equals(compressionIndicator), () => {
 						Y.State.Unsafe(() => {
-							Y.Increment();
+							Y.Inc();
 							X.Set(A.Set(TempPtr0[Y]));
-							Y.Increment();
+							Y.Inc();
 							Loop.Descend_Post(X, _ => block(A.Set(TempPtr0[Y])));
 						});
 					})
