@@ -1,7 +1,6 @@
-﻿using NESSharp.Core;
+using NESSharp.Core;
 using System;
 using System.Collections.Generic;
-using static NESSharp.Core.CPU6502;
 
 namespace NESSharp.Lib.Compression;
 
@@ -71,18 +70,18 @@ public class RLEVariance : Module, ICompressionScheme {
 
 	public void Decompress(Action<RegisterA> block) {
 		U8 compressionIndicator = 255;
-		_temp.Set(AL.TempPtr0[Y.Set(0)]);
-		Loop.While_PostCondition_PostInc(Y.Inc(), () => Y.LessThan(_temp), _ => {
+		_temp.Set(AL.TempPtr0[CPU.Y.Set(0)]);
+		Loop.While_PostCondition_PostInc(CPU.Y.Inc(), () => CPU.Y.LessThan(_temp), _ => {
 			If.Block(c => c
-				.True(() => A.Set(AL.TempPtr0[Y]).Equals(compressionIndicator), () => {
-					Y.State.Unsafe(() => {
-						Y.Inc();
-						X.Set(A.Set(AL.TempPtr0[Y]));
-						Y.Inc();
-						Loop.Descend_PostCondition_PostDec(X, _ => block(A.Set(AL.TempPtr0[Y])));
+				.True(() => CPU.A.Set(AL.TempPtr0[CPU.Y]).Equals(compressionIndicator), () => {
+					CPU.Y.State.Unsafe(() => {
+						CPU.Y.Inc();
+						CPU.X.Set(CPU.A.Set(AL.TempPtr0[CPU.Y]));
+						CPU.Y.Inc();
+						Loop.Descend_PostCondition_PostDec(CPU.X, _ => block(CPU.A.Set(AL.TempPtr0[CPU.Y])));
 					});
 				})
-				.Else(() => block(A.Set(AL.TempPtr0[Y])))
+				.Else(() => block(CPU.A.Set(AL.TempPtr0[CPU.Y])))
 			);
 		});
 	}

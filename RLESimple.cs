@@ -1,7 +1,6 @@
-﻿using NESSharp.Core;
+using NESSharp.Core;
 using System;
 using System.Collections.Generic;
-using static NESSharp.Core.CPU6502;
 
 namespace NESSharp.Lib.Compression;
 
@@ -48,13 +47,13 @@ public class RLESimple : Module, ICompressionScheme {
 	}
 
 	public void Decompress(Action<RegisterA> block) {
-		_temp.Set(AL.TempPtr0[Y.Set(0)]);
-		Loop.While_PostCondition_PostInc(Y.Inc(), () => Y.LessThan(_temp), _ => {
-			Y.State.Unsafe(() => {
-				X.Set(A.Set(AL.TempPtr0[Y]));
-				Y.Inc();
-				Loop.Descend_PostCondition_PostDec(X, _ => {
-					block(A.Set(AL.TempPtr0[Y]));
+		_temp.Set(AL.TempPtr0[CPU.Y.Set(0)]);
+		Loop.While_PostCondition_PostInc(CPU.Y.Inc(), () => CPU.Y.LessThan(_temp), _ => {
+			CPU.Y.State.Unsafe(() => {
+				CPU.X.Set(CPU.A.Set(AL.TempPtr0[CPU.Y]));
+				CPU.Y.Inc();
+				Loop.Descend_PostCondition_PostDec(CPU.X, _ => {
+					block(CPU.A.Set(AL.TempPtr0[CPU.Y]));
 				});
 			});
 		});
